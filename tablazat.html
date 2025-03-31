@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Táblázat</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <h1>CRUD Táblázat</h1>
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="tablazat.html">Táblázat</a>
+        <a href="#">HTML5</a>
+        <a href="#">ChartJS</a>
+        <a href="#">Ajax</a>
+        <a href="#">OOJS</a>
+    </nav>
+    <input type="text" id="search" placeholder="Keresés...">
+    <table>
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Név</th>
+                <th onclick="sortTable(1)">Kor</th>
+                <th onclick="sortTable(2)">Email</th>
+                <th onclick="sortTable(3)">Város</th>
+                <th>Műveletek</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            
+        </tbody>
+    </table>
+    <h2>Új hozzáadása</h2>
+    <form id="crudForm">
+        <input type="text" id="name" placeholder="Név (min 2 karakter)" required minlength="2">
+        <input type="number" id="age" placeholder="Kor (18-99)" required min="18" max="99">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="city" placeholder="Város (max 20 karakter)" required maxlength="20">
+        <button type="submit">Hozzáadás</button>
+    </form>
+    <script>
+        const tableBody = document.getElementById('tableBody');
+        const form = document.getElementById('crudForm');
+        const search = document.getElementById('search');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const email = document.getElementById('email').value;
+            const city = document.getElementById('city').value;
+
+            const row = `<tr>
+                <td>${name}</td>
+                <td>${age}</td>
+                <td>${email}</td>
+                <td>${city}</td>
+                <td>
+                    <button onclick="editRow(this)">Szerkesztés</button>
+                    <button onclick="deleteRow(this)">Törlés</button>
+                </td>
+            </tr>`;
+            tableBody.insertAdjacentHTML('beforeend', row);
+            form.reset();
+        });
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            tableBody.removeChild(row);
+        }
+
+        function editRow(button) {
+            const row = button.closest('tr').children;
+            document.getElementById('name').value = row[0].textContent;
+            document.getElementById('age').value = row[1].textContent;
+            document.getElementById('email').value = row[2].textContent;
+            document.getElementById('city').value = row[3].textContent;
+            tableBody.removeChild(button.closest('tr'));
+        }
+
+        search.addEventListener('input', function () {
+            const filter = search.value.toLowerCase();
+            const rows = tableBody.getElementsByTagName('tr');
+            for (const row of rows) {
+                const cells = row.getElementsByTagName('td');
+                let match = false;
+                for (const cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(filter)) {
+                        match = true;
+                        break;
+                    }
+                }
+                row.style.display = match ? '' : 'none';
+            }
+        });
+
+        function sortTable(columnIndex) {
+            const rows = Array.from(tableBody.getElementsByTagName('tr'));
+            const sorted = rows.sort((a, b) => {
+                const aText = a.children[columnIndex].textContent.toLowerCase();
+                const bText = b.children[columnIndex].textContent.toLowerCase();
+                return aText.localeCompare(bText);
+            });
+            tableBody.innerHTML = '';
+            sorted.forEach(row => tableBody.appendChild(row));
+        }
+    </script>
+</body>
+</html>
