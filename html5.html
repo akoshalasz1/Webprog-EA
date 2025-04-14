@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Web-programozás-1 Előadás Házi feladat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="worker.js"></script>
+</head>
+<body>
+    <header>
+        <h1 class="header">Web-programozás-1 Előadás Házi feladat</h1>
+    </header>
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="tablazat.html">Táblázat</a>
+        <a href="html5.html">HTML5</a>
+        <a href="chartjs.html">ChartJS</a>
+        <a href="#">Ajax</a>
+        <a href="#">OOJS</a>
+    </nav>
+<div id="feladatok">
+    <h3>Web Storage példa</h3>
+<input id="nameInput" placeholder="Írj be egy nevet">
+<button onclick="saveName()">Mentés</button>
+<p id="storedName"></p>
+
+<script>
+  function saveName() {
+    const name = document.getElementById("nameInput").value;
+    localStorage.setItem("username", name);
+    showName();
+  }
+
+  function showName() {
+    const name = localStorage.getItem("username");
+    document.getElementById("storedName").textContent = "Tárolt név: " + (name || "Nincs név elmentve");
+  }
+
+  showName(); // frissítéskor is megjelenik
+</script>
+
+
+<h3>Web Worker példa</h3>
+<button onclick="startWorker()">Számolás indítása</button>
+<p id="result">Eredmény: </p>
+
+<script>
+  let worker;
+
+  function startWorker() {
+    if (typeof(Worker) !== "undefined") {
+      if (!worker) {
+        worker = new Worker("worker.js");
+        worker.onmessage = function(e) {
+          document.getElementById("result").textContent = "Eredmény: " + e.data;
+        };
+      }
+      worker.postMessage("start"); // trigger
+    } else {
+      document.getElementById("result").textContent = "A böngésződ nem támogatja a Workereket.";
+    }
+  }
+</script>
+
+
+
+<h3>Geolocation példa</h3>
+<button onclick="getLocation()">Helyzet lekérése</button>
+<p id="locationInfo"></p>
+
+<script>
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        document.getElementById("locationInfo").textContent =
+          `Szélesség: ${pos.coords.latitude}, Hosszúság: ${pos.coords.longitude}`;
+      }, () => {
+        document.getElementById("locationInfo").textContent = "Hozzáférés megtagadva vagy hiba.";
+      });
+    } else {
+      document.getElementById("locationInfo").textContent = "A böngésző nem támogatja.";
+    }
+  }
+</script>
+
+<h3>Server-Sent Events példa</h3>
+<div id="sseBox">Várakozás az adatokra...</div>
+
+<script>
+  if (!!window.EventSource) {
+    const source = new EventSource("/sse"); // szervernek ezt kell kiszolgálnia
+    source.onmessage = function(event) {
+      document.getElementById("sseBox").textContent = "Üzenet: " + event.data;
+    };
+  } else {
+    document.getElementById("sseBox").textContent = "A böngésző nem támogatja az SSE-t.";
+  }
+</script>
+
+<h3>Drag and Drop példa</h3>
+
+<!-- Húzható doboz -->
+<div id="dragBox" draggable="true"
+     style="width:100px;height:100px;background:red;cursor:grab;">
+</div>
+
+<!-- Célterület -->
+<div id="dropZone"
+     style="width:300px;height:200px;border:2px dashed #333;margin-top:20px;transition:0.3s;">
+  Húzd ide a piros dobozt!
+</div>
+
+<script>
+  const dragBox = document.getElementById("dragBox");
+  const dropZone = document.getElementById("dropZone");
+
+  // Elindul a húzás
+  dragBox.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text/plain", "dragBox");
+  });
+
+  // A célterület engedélyezi a dobást
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+
+  // Ha belehúzzuk a dobozt
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    if (draggedId === "dragBox") {
+      dropZone.style.backgroundColor = "red";
+      dropZone.style.color = "white";
+      dropZone.textContent = "Sikeres drop! 🎉";
+    }
+  });
+</script>
+
+
+<h3>Canvas példa</h3>
+<canvas id="drawCanvas" width="400" height="300" style="border:1px solid black;"></canvas>
+
+<script>
+  const canvas = document.getElementById("drawCanvas");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+
+  canvas.addEventListener("mousedown", () => drawing = true);
+  canvas.addEventListener("mouseup", () => drawing = false);
+  canvas.addEventListener("mousemove", draw);
+
+  function draw(event) {
+    if (!drawing) return;
+
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+</script>
+
+
+<h3>SVG példa</h3>
+<svg width="200" height="200">
+  <circle cx="100" cy="100" r="80" fill="orange" stroke="black" stroke-width="2"/>
+  <text x="100" y="105" font-size="20" text-anchor="middle" fill="black">SVG</text>
+</svg>
+</div>
+</body>
+</html>
