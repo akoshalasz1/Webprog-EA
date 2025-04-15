@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>AJAX Menü</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 class="header">Web-programozás-1 Előadás Házi feladat</h1>
+  </header>
+  <nav>
+    <a href="index.html">Főoldal</a>
+    <a href="tablazat.html">Táblázat</a>
+    <a href="html5.html">HTML5</a>
+    <a href="chartjs.html">ChartJS</a>
+    <a href="ajax.html">Ajax</a>
+    <a href="OOJS.html">OOJS</a>
+  </nav>
+
+  <h1>AJAX Menü</h1>
+
+  <!-- READ -->
+  <section>
+    <h2>Adatok megjelenítése</h2>
+    <button onclick="readData()">Adatok lekérése</button>
+    <div id="data-list"></div>
+    <div id="stats"></div>
+  </section>
+
+  <hr>
+
+  <!-- CREATE -->
+  <section>
+    <h2>Új adat hozzáadása</h2>
+    <input id="create-name" placeholder="Név" maxlength="30">
+    <input id="create-height" type="text" placeholder="Magasság" maxlength="30">
+    <input id="create-weight" type="text" placeholder="Súly" maxlength="30">
+    <button onclick="createData()">Létrehozás</button>
+    <div id="create-msg"></div>
+  </section>
+
+  <hr>
+
+  <!-- UPDATE -->
+  <section>
+    <h2>Adat módosítása</h2>
+    <input id="update-id" placeholder="ID lekéréshez">
+    <button onclick="getDataForId()">Adat betöltése</button>
+    <button onclick="deleteUpdateId()">Visszavonás</button><br><br>
+    <input id="update-name" placeholder="Név" maxlength="30">
+    <input id="update-height" type="text" placeholder="Magasság" maxlength="30">
+    <input id="update-weight" type="text" placeholder="Súly" maxlength="30">
+    <button onclick="updateData()">Módosítás</button>
+    <div id="update-msg"></div>
+  </section>
+
+  <hr>
+
+  <!-- DELETE -->
+  <section>
+    <h2>Adat törlése</h2>
+    <input id="delete-id" placeholder="Törlendő ID">
+    <button onclick="deleteData()">Törlés</button>
+    <div id="delete-msg"></div>
+  </section>
+
+  <script src="ajax.js"></script>
+</body>
+</html>
